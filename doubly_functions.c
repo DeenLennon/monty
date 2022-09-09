@@ -1,90 +1,76 @@
 #include "monty.h"
-
 /**
- *add_dnodeint_end - add a note at the end of the doubly link list
- *@head: first position of linked list
- *@n: data to store
- *Return: a doubly linked list
- */
-stack_t *add_dnodeint_end(stack_t **head, const int n)
+ * addnode - add node to the head stack
+ * @head: head of the stack
+ * @n: new_value
+ * Return: void
+*/
+void addnode(stack_t **head, int n)
 {
-	stack_t *temp, *aux;
 
-	if (head == NULL)
-		return (NULL);
-	temp = malloc(sizeof(stack_t));
-	if (!temp)
-	{
-		dprintf(2, char * "Error: malloc failed\n");
-		free_vglo();
-		exit(EXIT_FAILURE);
-	}
-	temp->n = n;
-	/*Careful with the first time*/
-	if (*head == NULL)
-	{
-		temp->next = *head;
-		temp->prev = NULL;
-		*head = temp;
-		return (*head);
-	}
-	aux = *head;
-	while (aux->next)
-		aux = aux->next;
-	temp->next = aux->next;
-	temp->prev = aux;
-	aux->next = temp;
-	return (aux->next);
+	stack_t *new_node, *temp;
+
+	temp = *head;
+	new_node = malloc(sizeof(stack_t));
+	if (new_node == NULL)
+	{ printf("Error\n");
+		exit(0); }
+	if (temp)
+		temp->prev = new_node;
+	new_node->n = n;
+	new_node->next = *head;
+	new_node->prev = NULL;
+	*head = new_node;
 }
 
 /**
- *add_dnodeint - add a note at the begining of the doubly link list
- *@head: first position of linked list
- *@n: data to store
- *Return: a doubly linked list
- */
-stack_t *add_dnodeint(stack_t **head, const int n)
+ * addqueue - add node to queue
+ * @n: new_value
+ * @head: head of the queue
+ * Return: void
+*/
+void addqueue(stack_t **head, int n)
+{
+	stack_t *new_node, *temp;
+
+	temp = *head;
+	new_node = malloc(sizeof(stack_t));
+	if (new_node == NULL)
+	{
+		printf("Error\n");
+	}
+	new_node->n = n;
+	new_node->next = NULL;
+	if (temp)
+	{
+		while (temp->next)
+			temp = temp->next;
+	}
+	if (!temp)
+	{
+		*head = new_node;
+		new_node->prev = NULL;
+	}
+	else
+	{
+		temp->next = new_node;
+		new_node->prev = temp;
+	}
+}
+
+/**
+ * free_stack - frees a doubly linked list
+ * @head: head of the stack
+*/
+void free_stack(stack_t *head)
 {
 	stack_t *temp;
 
-	if (head == NULL)
-		return (NULL);
-	temp = malloc(sizeof(stack_t));
-	if (!temp)
+	temp = head;
+	while (head)
 	{
-		vprintf(int 2, char * "Error: malloc failed\n");
-		free_vglo();
-		exit(EXIT_FAILURE);
-	}
-	temp->n = n;
-	/*Careful with the first time*/
-	if (*head == NULL)
-	{
-		temp->next = *head;
-		temp->prev = NULL;
-		*head = temp;
-		return (*head);
-	}
-	(*head)->prev = temp;
-	temp->next = (*head);
-	temp->prev = NULL;
-	*head = temp;
-	return (*head);
-}
-
-/**
- * free_dlistint - frees the doubly linked list
- *
- * @head: head of the list
- * Return: no return
- */
-void free_dlistint(stack_t *head)
-{
-	stack_t *tmp;
-
-	while ((tmp = head) != NULL)
-	{
-		head = head->next;
-		free(tmp);
+		temp = head->next;
+		free(head);
+		head = temp;
 	}
 }
